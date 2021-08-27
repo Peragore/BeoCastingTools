@@ -1,0 +1,46 @@
+.marquee {
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 1920px;
+  /*position: absolute;*/    /* Removed */
+}
+
+.marquee span {
+  position: fixed;
+  display: inline-block;
+  font-size: 50px;
+  bottom: 5px;
+  color: #bea684;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  } 100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+
+
+/* Make it move */
+
+/*@keyframes marquee {*/
+/*  0% {*/
+/*    transform: translate(10%, 0);*/
+/*  }*/
+/*  100% {*/
+/*    transform: translate(-100%, 0);*/
+/*  }*/
+/*}*/
+/* Make it pretty */
+
+/*.scroll {*/
+/*  padding-left: 1.5em;*/
+/*  position: fixed;*/
+/*  font: 50px'Verdana';*/
+/*  bottom: 0px;*/
+/*  left: 0px;*/
+/*  height: 10%;*/
+/*}*/

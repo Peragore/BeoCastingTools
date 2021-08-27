@@ -120,19 +120,32 @@ def build_ticker_ept_cups(pageid):
             p2_score = 0
             for line in subseries:
                 if 'opponent1' in line:
-                    p1 = line.split('1=')[-1].split('|')[0].replace('}}\n', '')
+                    if re.search('\|1=', line):
+                        p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                    else:
+                        p1 = line.split('|')[2].replace('}}\n', '')
                     if 'score' in line:
                         p1_score = line.split('score=')[1].split('}')[0]
                     else:
                         manual_score_flag = True
                 elif 'opponent2' in line:
-                    p2 = line.split('1=')[-1].split('|')[0].replace('}}\n', '')
+                    if re.search('\|1=', line):
+                        p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                    else:
+                        p2 = line.split('|')[2].replace('}}\n', '')
                     if 'score' in line:
                         p2_score = line.split('score=')[1].split('}')[0]
                     else:
                         manual_score_flag = True
+                if 'walkover=1' in line:
+                    p1_score = 'W'
+                    p2_score = 'L'
+                elif 'walkover=2' in line:
+                    p1_score = 'L'
+                    p2_score = 'W'
                 elif manual_score_flag and 'winner' in line:
-                    winner_id = line.split('winner=')[1].split('}')[0]
+                    winner_id = line.split('winner=')[1].split('}')[0].partition('|')
+                    winner_id = winner_id[0]
                     if winner_id == '1':
                         p1_score += 1
                     elif winner_id == '2':
@@ -150,8 +163,10 @@ def build_ticker_ept_cups(pageid):
                     matches.append(' ' + p1 + ' (Bye) ')
 
             prev_series = series_num
+    matchstr = ''.join(matches)
+    while len(matchstr) < 100:
+        matchstr += matchstr
 
     with open('results.txt', 'w') as output:
-        matchstr = ''.join(matches)
         output.write(matchstr)
     print('Populated Results')

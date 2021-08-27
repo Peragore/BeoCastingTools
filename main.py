@@ -1,9 +1,12 @@
+import time
+
 import requests
 import headtohead
 import build_ticker
 import threading
 import PySimpleGUI as sg
 from os import path
+import ticker_server
 
 if path.exists('results.txt'):
     f = open('results.txt', 'rt')
@@ -27,7 +30,7 @@ if __name__ == '__main__':
 
     has_clicked = False
     while True:
-        event, values = window.read(timeout=37000)
+        event, values = window.read(timeout=60000)
         if event == sg.WIN_CLOSED:
             break
         if values['pageid'] != '' and has_clicked:

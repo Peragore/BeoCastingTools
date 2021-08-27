@@ -1,0 +1,34 @@
+body {
+  background-image: url("/../img/h2h_back.png");
+  background-size: cover;
+  overflow: hidden;
+
+}
+
+/*:root {*/
+/*  --width: 800px;*/
+/*  --height: 120px;*/
+/*  --border-size: 2px;*/
+/*  --border-color: black;*/
+/*  --border-radius: 30px;*/
+/*}*/
+
+/*div.box {*/
+/*  width: var(--width);*/
+/*  height: var(--height);*/
+/*  position: absolute;*/
+/*  text-align: center;*/
+/*  left: calc((100% - var(--width)) / 2);*/
+/*  top: calc((100% - var(--height)) / 2);*/
+/*  border: var(--border-size) solid var(--border-color);*/
+/*  border-radius: 0px var(--border-radius) 0px var(--border-radius);*/
+/*  !*background-image: url("../../img/textures/texture2.jpg");*!*/
+/*  background-size: cover;*/
+/*}*/
+
+div.test {
+    height: 100px;
+    width: 100px;
+    background-image: url("../img/Lambo.jpg");
+    background-size: cover;
+}
