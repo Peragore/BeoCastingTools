@@ -1,4 +1,4 @@
-.marquee {
+ .marquee {
   margin: 0 auto;
   white-space: nowrap;
   overflow: hidden;
@@ -79,6 +79,8 @@
     transform: translate(-200%, 0);
   }
 }
+
+
 
 
 

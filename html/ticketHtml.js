@@ -6,7 +6,7 @@ socket.onopen = function(e) {
 };
 
 let cached_message = '';
-socket.onmessage = function(event) {
+socket.onmessage = async function(event) {
   let message = event.data;
   let messageElem = document.createElement('div');
   let element = document.getElementById('ticker');
@@ -25,10 +25,13 @@ socket.onmessage = function(event) {
   element2.innerHTML = cached_message;
   element3.innerHTML = cached_message;
   let desiredSpeed = 5;
-  let time = width/desiredSpeed
+  let time = width/desiredSpeed;
   element.style.animation = 'marquee ' + time + 's linear 1 forwards';
-  element2.style.animation = 'marquee2 ' + time + 's linear infinite ' + time/3 + 's';
-  element3.style.animation = 'marquee3 ' + time + 's linear infinite ' + time*0.83 + 's';
+  while(element.getBoundingClientRect().right > 1920){
+    await new Promise(r => setTimeout(r, 10));
+  }
+  element2.style.animation = 'marquee2 ' + time + 's linear infinite ';
+  element3.style.animation = 'marquee3 ' + time + 's linear infinite ' + time/2 + 's';
 };
 
 // while(true){

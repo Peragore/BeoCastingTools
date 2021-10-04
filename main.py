@@ -6,6 +6,7 @@ import build_ticker
 import threading
 import PySimpleGUI as sg
 from os import path
+from threading import Thread
 
 if path.exists('results.txt'):
     f = open('results.txt', 'rt')
@@ -29,7 +30,7 @@ if __name__ == '__main__':
 
     has_clicked = False
     while True:
-        event, values = window.read(timeout=60000)
+        event, values = window.read(timeout=500)
         if event == sg.WIN_CLOSED:
             break
         if event == 'Stop':
@@ -37,7 +38,13 @@ if __name__ == '__main__':
             window['Start'].Update(button_color='dark blue')
             has_clicked = False
         if values['pageid'] != '' and has_clicked and values['dropdown'] == 'DH EU':
-            build_ticker.build_ticker_DH_EU_groups(values['pageid'], values['prepend'])
+            if not t.is_alive():
+                t = Thread(target=build_ticker.build_ticker_DH_EU_groups,
+                           args=(values['pageid'],),
+                           kwargs={'prepend': values['prepend']},
+                           daemon=True)
+                t.start()
+
         elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'EPT Cups':
             build_ticker.build_ticker_ept_cups(values['pageid'], values['prepend'])
         elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'NA Cups':
@@ -46,12 +53,16 @@ if __name__ == '__main__':
         if event == 'Start':
 
             if values['dropdown'] == 'DH EU':
-                try:
-                    build_ticker.build_ticker_DH_EU_groups(values['pageid'], values['prepend'])
-                    window[event].Update(button_color='black')
-                    window['Stop'].Update(button_color='dark blue')
-                except:
-                    print('Invalid pageid')
+                # try:
+                t = Thread(target=build_ticker.build_ticker_DH_EU_groups,
+                           args=(values['pageid'], ),
+                           kwargs={'prepend': values['prepend']},
+                           daemon=True)
+                t.start()
+                window[event].Update(button_color='black')
+                window['Stop'].Update(button_color='dark blue')
+                # except:
+                #     print('Invalid pageid')
 
             elif values['dropdown'] == 'EPT Cups':
                 try:
