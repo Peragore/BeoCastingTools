@@ -6,19 +6,77 @@
   /*position: absolute;*/    /* Removed */
 }
 
+.marquee2 {
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 1920px;
+  /*position: absolute;*/    /* Removed */
+}
+
+.marquee3 {
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 1920px;
+  /*position: absolute;*/    /* Removed */
+}
+
 .marquee span {
   position: fixed;
   display: inline-block;
   font-size: 50px;
   bottom: 5px;
-  color: #bea684;
+  left: 10%;
+  /*color: #bea684;*/
+  color: #FFFFFF;
+  white-space: pre;
 }
+
+.marquee2 span {
+  position: fixed;
+  display: inline-block;
+  font-size: 50px;
+  bottom: 5px;
+  left: 100%;
+  /*color: #bea684;*/
+  color: #FFFFFF;
+  white-space: pre;
+}
+
+.marquee3 span {
+  position: fixed;
+  display: inline-block;
+  font-size: 50px;
+  bottom: 5px;
+  left: 90%;
+  /*color: #bea684;*/
+  color: #FFFFFF;
+  white-space: pre;
+}
+
 
 @keyframes marquee {
   0% {
     transform: translate(0, 0);
   } 100% {
-    transform: translate(-100%, 0);
+    transform: translate(-200%, 0);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translate(0, 0);
+  } 100% {
+    transform: translate(-200%, 0);
+  }
+}
+
+@keyframes marquee3 {
+  0% {
+    transform: translate(0, 0);
+  } 100% {
+    transform: translate(-200%, 0);
   }
 }
 

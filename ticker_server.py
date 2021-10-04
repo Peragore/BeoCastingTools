@@ -1,5 +1,6 @@
 import asyncio
 import time
+import threading
 
 import websockets
 
@@ -8,7 +9,7 @@ async def provideResults(websocket, path):
     while True:
         results = open("results.txt")
         await websocket.send(results.read())
-        print(results.read())
+
 
 
 start_server = websockets.serve(provideResults, "localhost", 8766)

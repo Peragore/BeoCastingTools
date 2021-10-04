@@ -10,24 +10,48 @@ socket.onmessage = function(event) {
   let message = event.data;
   let messageElem = document.createElement('div');
   let element = document.getElementById('ticker');
+  let element2 = document.getElementById('ticker2');
+  let element3 = document.getElementById('ticker3');
+
 
   let width = getWidthOfText(message, element.style.fontFamily, element.style.fontSize);
-  let calc_width = width;
+
   if (message.localeCompare(cached_message) != 0) {
 
     cached_message = message;
   }
   messageElem.textContent = cached_message;
   element.innerHTML = cached_message;
+  element2.innerHTML = cached_message;
+  element3.innerHTML = cached_message;
   let desiredSpeed = 5;
   let time = width/desiredSpeed
-  element.style.animation = 'marquee linear infinite ' + time + 's';
+  element.style.animation = 'marquee ' + time + 's linear 1 forwards';
+  element2.style.animation = 'marquee2 ' + time + 's linear infinite ' + time/3 + 's';
+  element3.style.animation = 'marquee3 ' + time + 's linear infinite ' + time*0.83 + 's';
 };
 
-
-socket.onerror = function(error) {
-  alert(`[error] ${error.message}`);
-};
+// while(true){
+//
+//
+//     let messageElem = document.createElement('div');
+//     let element = document.getElementById('ticker');
+//     let element2 = document.getElementById('ticker2');
+//
+//
+//     let width = getWidthOfText(cached_message, element.style.fontFamily, element.style.fontSize);
+//     messageElem.textContent = cached_message;
+//     element.innerHTML = cached_message;
+//     element2.innerHTML = cached_message;
+//
+//     let desiredSpeed = 30;
+//     let time = width/desiredSpeed
+//     element.style.animation = 'marquee ' + time + 's linear 1 forwards';
+//     element2.style.animation = 'marquee2 ' + time + 's linear infinite ' + time/2 + 's';
+//
+//
+//
+// }
 
 function getWidthOfText(txt, fontname, fontsize){
     if(getWidthOfText.c === undefined){
@@ -40,12 +64,12 @@ function getWidthOfText(txt, fontname, fontsize){
     return getWidthOfText.ctx.measureText(txt).width;
 }
 
-var timeFor10Px = 0.2;
-var animationSettings = 'marquee linear infinite';
-var $marque = $('.marque');
+function readText(filePath) {
+    let client = new XMLHttpRequest();
+    client.open('GET', filePath);
+    client.onreadystatechange = function(){return client.responseText};
+    client.send();
+}
 
-$marque.each( function() {
-  var outerWidth = $(this).outerWidth();
-  var calc = outerWidth / 10 * timeFor10Px;
-  $(this).css('animation', animationSettings + ' ' + calc + 's');
-});
+
+
