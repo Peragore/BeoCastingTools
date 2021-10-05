@@ -26,12 +26,16 @@ socket.onmessage = async function(event) {
   element3.innerHTML = cached_message;
   let desiredSpeed = 5;
   let time = width/desiredSpeed;
+  time = parseInt(time);
   element.style.animation = 'marquee ' + time + 's linear 1 forwards';
   while(element.getBoundingClientRect().right > 1920){
     await new Promise(r => setTimeout(r, 10));
   }
-  element2.style.animation = 'marquee2 ' + time + 's linear infinite ';
-  element3.style.animation = 'marquee3 ' + time + 's linear infinite ' + time/2 + 's';
+  element2.style.animation = 'marquee ' + time + 's linear infinite ';
+  element3.style.animation = 'marquee ' + time + 's linear infinite ' + time/2 + 's';
+    while(element.getBoundingClientRect().right > 1920){
+    await new Promise(r => setTimeout(r, 1000));
+  }
 };
 
 // while(true){

@@ -4,7 +4,10 @@
   overflow: hidden;
   width: 1920px;
   /*position: absolute;*/    /* Removed */
+
+
 }
+
 
 .marquee2 {
   margin: 0 auto;
@@ -31,6 +34,7 @@
   /*color: #bea684;*/
   color: #FFFFFF;
   white-space: pre;
+  will-change: transform;
 }
 
 .marquee2 span {
@@ -42,6 +46,8 @@
   /*color: #bea684;*/
   color: #FFFFFF;
   white-space: pre;
+  will-change: transform;
+
 }
 
 .marquee3 span {
@@ -49,58 +55,20 @@
   display: inline-block;
   font-size: 50px;
   bottom: 5px;
-  left: 90%;
+  left: 100%;
   /*color: #bea684;*/
   color: #FFFFFF;
   white-space: pre;
+  will-change: transform;
+
 }
+
 
 
 @keyframes marquee {
   0% {
-    transform: translate(0, 0);
+    -webkit-transform: translate(0%, 0);
   } 100% {
-    transform: translate(-200%, 0);
+    -webkit-transform: translate(-200%, 0);
   }
 }
-
-@keyframes marquee2 {
-  0% {
-    transform: translate(0, 0);
-  } 100% {
-    transform: translate(-200%, 0);
-  }
-}
-
-@keyframes marquee3 {
-  0% {
-    transform: translate(0, 0);
-  } 100% {
-    transform: translate(-200%, 0);
-  }
-}
-
-
-
-
-
-/* Make it move */
-
-/*@keyframes marquee {*/
-/*  0% {*/
-/*    transform: translate(10%, 0);*/
-/*  }*/
-/*  100% {*/
-/*    transform: translate(-100%, 0);*/
-/*  }*/
-/*}*/
-/* Make it pretty */
-
-/*.scroll {*/
-/*  padding-left: 1.5em;*/
-/*  position: fixed;*/
-/*  font: 50px'Verdana';*/
-/*  bottom: 0px;*/
-/*  left: 0px;*/
-/*  height: 10%;*/
-/*}*/

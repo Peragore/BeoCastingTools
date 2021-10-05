@@ -46,34 +46,53 @@ if __name__ == '__main__':
                 t.start()
 
         elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'EPT Cups':
-            build_ticker.build_ticker_ept_cups(values['pageid'], values['prepend'])
+
+            if not t.is_alive():
+                t = Thread(target=build_ticker.build_ticker_ept_cups,
+                           args=(values['pageid'],),
+                           kwargs={'prepend': values['prepend']},
+                           daemon=True)
+                t.start()
         elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'NA Cups':
-            build_ticker.build_ticker_DH_NA_groups(values['pageid'], values['prepend'])
+            if not t.is_alive():
+                t = Thread(target=build_ticker.build_ticker_DH_NA_groups,
+                           args=(values['pageid'],),
+                           kwargs={'prepend': values['prepend']},
+                           daemon=True)
+                t.start()
 
         if event == 'Start':
 
             if values['dropdown'] == 'DH EU':
-                # try:
-                t = Thread(target=build_ticker.build_ticker_DH_EU_groups,
-                           args=(values['pageid'], ),
-                           kwargs={'prepend': values['prepend']},
-                           daemon=True)
-                t.start()
-                window[event].Update(button_color='black')
-                window['Stop'].Update(button_color='dark blue')
-                # except:
-                #     print('Invalid pageid')
+                try:
+                    t = Thread(target=build_ticker.build_ticker_DH_EU_groups,
+                               args=(values['pageid'], ),
+                               kwargs={'prepend': values['prepend']},
+                               daemon=True)
+                    t.start()
+                    window[event].Update(button_color='black')
+                    window['Stop'].Update(button_color='dark blue')
+                except:
+                    print('Invalid pageid')
 
             elif values['dropdown'] == 'EPT Cups':
                 try:
-                    build_ticker.build_ticker_ept_cups(values['pageid'], values['prepend'])
+                    t = Thread(target=build_ticker.build_ticker_ept_cups,
+                               args = (values['pageid'],),
+                               kwargs={'prepend': values['prepend']},
+                               daemon=True)
+                    t.start()
                     window[event].Update(button_color='black')
                     window['Stop'].Update(button_color='dark blue')
                 except:
                     print('Invalid Pageid')
             elif values['dropdown'] == 'DH NA':
                 try:
-                    build_ticker.build_ticker_DH_NA_groups(values['pageid'], values['prepend'])
+                    t = Thread(target=build_ticker.build_ticker_DH_NA_groups,
+                               args = (values['pageid'],),
+                               kwargs={'prepend': values['prepend']},
+                               daemon=True)
+                    t.start()
                     window[event].Update(button_color='black')
                     window['Stop'].Update(button_color='dark blue')
                 except:
