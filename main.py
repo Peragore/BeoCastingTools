@@ -53,7 +53,7 @@ if __name__ == '__main__':
                            kwargs={'prepend': values['prepend']},
                            daemon=True)
                 t.start()
-        elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'NA Cups':
+        elif values['pageid'] != '' and has_clicked and values['dropdown'] == 'DH NA':
             if not t.is_alive():
                 t = Thread(target=build_ticker.build_ticker_DH_NA_groups,
                            args=(values['pageid'],),

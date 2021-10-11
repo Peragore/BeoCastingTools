@@ -38,9 +38,10 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
         match_list = re.split('\|M[0-9]|<', group)
         group_name = group[1:8] + ' | '
         del match_list[0]
-        player_names = re.split('\|bg[0-9]=\|', group)
+        player_names = re.split('\|p[0-9]=', group)
         del player_names[0]
-        player_names_list = [x.split('\n')[0].split('=')[1] for x in player_names]
+        player_names_list = [x.split('\n')[0].split('=') for x in player_names[0:8]]
+        player_names_list = [x[0] for x in player_names_list]
         results_dict = dict.fromkeys(player_names_list)
         for key in player_names_list:
             results_dict[key] = {'Map Diff': 0, 'Map Wins': 0, 'Map Losses': 0, 'Match Wins': 0, 'Match Losses': 0}
@@ -134,103 +135,21 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                     if p2 == '':
                         p2 = 'TBD'
 
-        img = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
-        fnt = ImageFont.truetype('Roboto-Bold.ttf', size=30)
-        d = ImageDraw.Draw(img)
+        generate_image(group_name, results_dict)
 
-        ordered_results = sorted(results_dict, key=lambda x: (results_dict[x]['Map Diff'], results_dict[x]['Map Wins']))
-        # Player Names
-        d.text((1260, 370), ordered_results[7], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 415), ordered_results[6], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 457), ordered_results[5], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 501), ordered_results[4], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 545), ordered_results[3], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 590), ordered_results[2], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 635), ordered_results[1], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 675), ordered_results[0], font=fnt, fill=(255, 255, 255))
-
-        # Match Score
-        d.text((1620, 375),
-               str(results_dict[ordered_results[7]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[7]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 420),
-               str(results_dict[ordered_results[6]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[6]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 464),
-               str(results_dict[ordered_results[5]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[5]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 509),
-               str(results_dict[ordered_results[4]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[4]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 553),
-               str(results_dict[ordered_results[3]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[3]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 597),
-               str(results_dict[ordered_results[2]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[2]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 640),
-               str(results_dict[ordered_results[1]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[1]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 683),
-               str(results_dict[ordered_results[0]]['Match Wins']) + ' - ' + str(
-                   results_dict[ordered_results[0]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-
-        # Map Scores
-        d.text((1820, 375),
-               str(results_dict[ordered_results[7]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[7]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 420),
-               str(results_dict[ordered_results[6]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[6]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 464),
-               str(results_dict[ordered_results[5]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[5]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 509),
-               str(results_dict[ordered_results[4]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[4]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 553),
-               str(results_dict[ordered_results[3]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[3]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 597),
-               str(results_dict[ordered_results[2]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[2]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 640),
-               str(results_dict[ordered_results[1]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[1]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 683),
-               str(results_dict[ordered_results[0]]['Map Wins']) + ' - ' + str(
-                   results_dict[ordered_results[0]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-
-        img.save(group_name.split('|')[0].replace(' ', '') + '.png')
-
-
-    matchstr = ''
+    matchlist = []
     for key in matches.keys():
         if matches[key] != []:
-            matchstr += key + ''.join(matches[key])
-    if prepend != '':
-        matchstr = '  |  ' + prepend + '  |  ' + matchstr
+            if prepend != '':
+                matchlist.append('  |  ' + prepend + '  |  ')
 
+            matchlist.append(key + ''.join(matches[key]))
+
+    matchstr = ''.join(matchlist)
     with open('results.txt', 'w') as output:
         output.write(matchstr)
     print('Populated Results')
-    time.sleep(30)
+    time.sleep(40)
 
 
 def build_ticker_ept_cups(pageid, prepend=''):
@@ -335,7 +254,7 @@ def build_ticker_ept_cups(pageid, prepend=''):
     with open('results.txt', 'w') as output:
         output.write(matchstr)
     print('Populated Results')
-    time.sleep(30)
+    time.sleep(40)
 
 
 def build_ticker_DH_EU_groups(pageid, prepend=''):
@@ -370,7 +289,7 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
     matches = {}
     for group in group_names:
         print(group)
-        time.sleep(30)
+        time.sleep(40)
         HEADER_GROUPS = {'User-Agent': f'Live Match Results Ticker {group} (beomulf@gmail.com)'}
 
 
@@ -386,9 +305,12 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
         wikitext = data['parse']['wikitext']['*']
         lines = wikitext.split('|-')
         group_data = lines[-1]
-        player_names = re.split('\|bg[0-9]=\|', group_data)
+        player_names = re.split('\|p[0-9]=', group_data)
         del player_names[0]
-        player_names_list = [x.split('\n')[0].split('=')[1] for x in player_names]
+        # if 'bg' in group:
+        #     player_names = re.split('\|p[0-9]=', group_data)
+        player_names_list = [x.split('\n')[0].split('=') for x in player_names[0:8]]
+        player_names_list = [x[0] for x in player_names_list]
         results_dict = dict.fromkeys(player_names_list)
         for key in player_names_list:
             results_dict[key] = {'Map Diff': 0, 'Map Wins': 0, 'Map Losses': 0, 'Match Wins': 0, 'Match Losses': 0}
@@ -405,6 +327,7 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
                 date = [x for x in date_info if 'date' in x]
                 date = date[0].split('=')[1].split('{{')
                 date = date[0] + re.sub('[a-z |{|}|\/]', '', date[1]).replace('\n', '')
+                date = date.replace('A', '')
                 for zone, offset in TIMEZONES.items():
                     try:
                         date = date.replace(zone, offset)
@@ -486,78 +409,7 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
                     if p2 == '':
                         p2 = 'TBD'
 
-
-
-        img = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
-        fnt = ImageFont.truetype('Roboto-Bold.ttf', size=30)
-        d = ImageDraw.Draw(img)
-
-        ordered_results = sorted(results_dict, key=lambda x: (results_dict[x]['Map Diff'], results_dict[x]['Map Wins']))
-        #Player Names
-        d.text((1260, 370), ordered_results[7], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 415), ordered_results[6], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 457), ordered_results[5], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 501), ordered_results[4], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 545), ordered_results[3], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 590), ordered_results[2], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 635), ordered_results[1], font=fnt, fill=(255, 255, 255))
-        d.text((1260, 675), ordered_results[0], font=fnt, fill=(255, 255, 255))
-
-        #Match Score
-        d.text((1620, 375),
-               str(results_dict[ordered_results[7]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[7]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 420),
-               str(results_dict[ordered_results[6]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[6]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 464),
-               str(results_dict[ordered_results[5]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[5]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 509),
-               str(results_dict[ordered_results[4]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[4]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 553),
-               str(results_dict[ordered_results[3]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[3]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 597),
-               str(results_dict[ordered_results[2]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[2]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 640),
-               str(results_dict[ordered_results[1]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[1]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1620, 683),
-               str(results_dict[ordered_results[0]]['Match Wins']) + ' - ' + str(results_dict[ordered_results[0]]['Match Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-
-        #Map Scores
-        d.text((1820, 375),
-               str(results_dict[ordered_results[7]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[7]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 420),
-               str(results_dict[ordered_results[6]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[6]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 464),
-               str(results_dict[ordered_results[5]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[5]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 509),
-               str(results_dict[ordered_results[4]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[4]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 553),
-               str(results_dict[ordered_results[3]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[3]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 597),
-               str(results_dict[ordered_results[2]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[2]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 640),
-               str(results_dict[ordered_results[1]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[1]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-        d.text((1820, 683),
-               str(results_dict[ordered_results[0]]['Map Wins']) + ' - ' + str(results_dict[ordered_results[0]]['Map Losses']),
-               font=fnt, fill=(255, 255, 255), anchor='mt')
-
-        img.save(group_name.split('|')[0].replace(' ', '') + '.png')
-
-
+        generate_image(group_name, results_dict)
 
     matchstr = ''
     for key in matches.keys():
@@ -571,3 +423,116 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
         output.write(matchstr)
     print('Populated Results')
 
+
+def generate_image(group_name, results_dict):
+    img = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
+    img2 = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
+    fnt = ImageFont.truetype('Roboto-Bold.ttf', size=30)
+    d = ImageDraw.Draw(img)
+    d2 = ImageDraw.Draw(img2)
+
+    ordered_results = sorted(results_dict, key=lambda x: (results_dict[x]['Match Wins'] - results_dict[x]['Match Losses'],
+                                                          results_dict[x]['Map Diff'],
+                                                          results_dict[x]['Map Wins']))
+    # Player Names
+    d.text((1260, 370), ordered_results[7], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 415), ordered_results[6], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 457), ordered_results[5], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 501), ordered_results[4], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 545), ordered_results[3], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 590), ordered_results[2], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 635), ordered_results[1], font=fnt, fill=(255, 255, 255))
+    d.text((1260, 675), ordered_results[0], font=fnt, fill=(255, 255, 255))
+
+    # Match Score
+    d.text((1620, 375),
+           str(results_dict[ordered_results[7]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[7]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 420),
+           str(results_dict[ordered_results[6]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[6]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 464),
+           str(results_dict[ordered_results[5]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[5]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 509),
+           str(results_dict[ordered_results[4]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[4]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 553),
+           str(results_dict[ordered_results[3]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[3]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 597),
+           str(results_dict[ordered_results[2]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[2]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 640),
+           str(results_dict[ordered_results[1]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[1]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1620, 683),
+           str(results_dict[ordered_results[0]]['Match Wins']) + ' - ' + str(
+               results_dict[ordered_results[0]]['Match Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+
+    # Map Scores
+    d.text((1820, 375),
+           str(results_dict[ordered_results[7]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[7]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 420),
+           str(results_dict[ordered_results[6]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[6]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 464),
+           str(results_dict[ordered_results[5]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[5]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 509),
+           str(results_dict[ordered_results[4]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[4]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 553),
+           str(results_dict[ordered_results[3]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[3]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 597),
+           str(results_dict[ordered_results[2]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[2]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 640),
+           str(results_dict[ordered_results[1]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[1]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+    d.text((1820, 683),
+           str(results_dict[ordered_results[0]]['Map Wins']) + ' - ' + str(
+               results_dict[ordered_results[0]]['Map Losses']),
+           font=fnt, fill=(255, 255, 255), anchor='mt')
+
+    img.save(group_name.split('|')[0].replace(' ', '') + '.png')
+
+    fullscreen_start = 300
+    score_start = 640
+    maps_start = 815
+    # Player Names
+    name_vert_start = 730
+    num_vert_start = 735
+    counter = 0
+    for result in ordered_results:
+        d2.text((fullscreen_start, name_vert_start-counter*50), result, font=fnt, fill=(255, 255, 255))
+        d2.text((score_start, num_vert_start-counter*50),
+                str(results_dict[result]['Match Wins']) + ' - ' + str(results_dict[result]['Match Losses']),
+                font=fnt,
+                fill=(255, 255, 255),
+                anchor='mt')
+        d2.text((maps_start, num_vert_start-counter*50),
+                str(results_dict[result]['Map Wins']) + ' - ' + str(results_dict[result]['Map Losses']),
+                font=fnt,
+                fill=(255, 255, 255),
+                anchor='mt')
+        counter += 1
+
+    img2.save(group_name.split('|')[0].replace(' ', '') + '_FullScreen.png')
