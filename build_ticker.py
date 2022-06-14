@@ -2,9 +2,16 @@ import requests
 import re
 import datetime
 from dateutil import parser
-import json
 import time
 from PIL import Image, ImageDraw, ImageFont
+import urllib.parse
+
+
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import os
+import pickle
 
 
 HEADER = {'User-Agent': 'Live Match Results Ticker (beomulf@gmail.com)'}
@@ -14,6 +21,7 @@ S = requests.Session()
 URL = "https://liquipedia.net/starcraft2/api.php"
 HEADER = {'User-Agent': 'Live Match Results Ticker (beomulf@gmail.com)'}
 TIMEZONES = {'CEST': '+02:00', 'EDT': '-04:00'}
+RACELIBRARY = {'T': 'Terran', 'P': 'Protoss', 'Z': 'Zerg', 'R': 'Random'}
 
 
 def build_ticker_DH_NA_groups(pageid, prepend=''):
@@ -40,7 +48,7 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
         del match_list[0]
         player_names = re.split('\|p[0-9]=', group)
         del player_names[0]
-        player_names_list = [x.split('\n')[0].split('=') for x in player_names[0:8]]
+        player_names_list = [x.split('|')[0].split('=') for x in player_names[0:8]]
         player_names_list = [x[0] for x in player_names_list]
         results_dict = dict.fromkeys(player_names_list)
         for key in player_names_list:
@@ -48,13 +56,12 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
 
         matches[group_name] = []
         for match in match_list:
-            if 'header' not in match and 'opponent1' in match:
+            if 'opponent1' in match:
                 if 'bestof=5' in match:
                     break
                 subseries = match.split('    ')
-                dateinfo = match.split('|')
-                date = [x for x in dateinfo if 'date' in x]
-                date = date[0].split('=')[1].split('{{')
+                dateinfo = match.split('date=')[1].split('|')[0]
+                date = dateinfo.split('{{')
                 date = date[0] + re.sub('[a-z |{|}|\/]', '', date[1]).replace('\n', '')
                 for zone, offset in TIMEZONES.items():
                     try:
@@ -75,7 +82,7 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                         if re.search('\|1=', line):
                             p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
                         else:
-                            p1 = line.split('|')[2].replace('}}\n', '').split('p1=')[1]
+                            p1 = line.split('|')[2].replace('}}\n', '').split('p1=')[0]
                         if 'score' in line:
                             p1_score = line.split('score=')[1].split('}')[0]
                         else:
@@ -84,7 +91,7 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                         if re.search('\|1=', line):
                             p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
                         else:
-                            p2 = line.split('|')[2].replace('}}\n', '').split('p1=')[1]
+                            p2 = line.split('|')[2].replace('}}\n', '').split('p1=')[0]
                         if 'score' in line:
                             p2_score = line.split('score=')[1].split('}')[0]
                         else:
@@ -107,6 +114,12 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                     p1_score = '0'
                 if p2_score == '':
                     p2_score = '0'
+                if p1 not in results_dict:
+                    results_dict[p1] = {'Map Diff': 0, 'Map Wins': 0, 'Map Losses': 0, 'Match Wins': 0,
+                                         'Match Losses': 0}
+                if p2 not in results_dict:
+                    results_dict[p2] = {'Map Diff': 0, 'Map Wins': 0, 'Map Losses': 0, 'Match Wins': 0,
+                                         'Match Losses': 0}
                 results_dict[p1]['Map Wins'] += p1_score
                 results_dict[p2]['Map Wins'] += p2_score
                 results_dict[p1]['Map Losses'] += p2_score
@@ -121,7 +134,7 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                         results_dict[p2]['Match Wins'] += 1
                         results_dict[p1]['Match Losses'] += 1
 
-                if timeDiff < 8:
+                if timeDiff < 10:
                     if p1 != '':
                         if p1 != 'BYE' and p2 != 'BYE':
                             matches[group_name].append(
@@ -135,7 +148,7 @@ def build_ticker_DH_NA_groups(pageid, prepend=''):
                     if p2 == '':
                         p2 = 'TBD'
 
-        generate_image(group_name, results_dict)
+        generate_group_standings_img(group_name, results_dict)
 
     matchlist = []
     for key in matches.keys():
@@ -181,71 +194,75 @@ def build_ticker_ept_cups(pageid, prepend=''):
     round_tracker = 0
 
     for series in table:
-        if 'header' in series:
-            header = series.split('=')[1].split('({{')
-            rounds[str(header[0])] = header[1].split('|')[1].replace('}})\n', '').split('\n')[0]
-        elif re.search('M[0-9]', series):
-            round_keys = list(rounds.keys())
-            subseries = series.split('    ')
-            series_num = int(subseries[0].split('M')[1].split('=')[0])
-            manual_score_flag = False
-            p1_score = 0
-            p2_score = 0
-            for line in subseries:
-                if 'opponent1' in line:
-                    if re.search('\|1=', line):
-                        p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
-                    else:
-                        p1 = line.split('|')[2].replace('}}\n', '')
-                    if 'score' in line:
-                        p1_score = line.split('score=')[1].split('}')[0]
-                    else:
-                        manual_score_flag = True
-                elif 'opponent2' in line:
-                    if re.search('\|1=', line):
-                        p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
-                    else:
-                        p2 = line.split('|')[2].replace('}}\n', '')
-                    if 'score' in line:
-                        p2_score = line.split('score=')[1].split('}')[0]
-                    else:
-                        manual_score_flag = True
-                if 'walkover=1' in line:
-                    p1_score = 'W'
-                    p2_score = 'L'
-                elif 'walkover=2' in line:
-                    p1_score = 'L'
-                    p2_score = 'W'
-                elif manual_score_flag and 'winner' in line:
-                    winner_id = line.split('winner=')[1].split('}')[0].partition('|')
-                    winner_id = winner_id[0]
-                    if winner_id == '1':
-                        p1_score += 1
-                    elif winner_id == '2':
-                        p2_score += 1
-            if series_num < prev_series and p1 != '':
-                key = str(round_keys[round_tracker])
-                matches.append('| ' + key + ' (BO ' + rounds[key] + ') :')
-                round_tracker += 1
-            if p1_score == '':
-                p1_score = '0'
-            if p2_score == '':
-                p2_score = '0'
-            if p1 != '':
-                if p1 != 'BYE' and p2 != 'BYE':
-                    matches.append(' ' + p1 + ' ' + str(p1_score) + '-' + str(p2_score) + ' ' + p2 + '    ')
-                elif p1 == 'BYE':
-                    matches.append(' ' + p2 + ' (Bye) ')
-                elif p2 == 'BYE':
-                    matches.append(' ' + p1 + ' (Bye) ')
-            if p1 == '':
-                p1 = 'TBD'
-            if p2 == '':
-                p2 = 'TBD'
-            prev_series = series_num
+        if '{{bracket' not in series:
+            if 'header' in series:
+                header = series.split('=')[1].split('({{')
+                rounds[str(header[0])] = header[1].split('|')[1].replace('}})\n', '').split('\n')[0]
+            elif re.search('M[0-9]', series):
+                round_keys = list(rounds.keys())
+                subseries = series.split('    ')
+                series_num = int(subseries[0].split('M')[1].split('=')[0])
+                manual_score_flag = False
+                p1_score = 0
+                p2_score = 0
+                for line in subseries:
+                    if 'opponent1' in line:
+                        if re.search('\|1=', line):
+                            p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                        else:
+                            p1 = line.split('|')[2].replace('}}\n', '')
+                        if 'score' in line:
+                            p1_score = line.split('score=')[1].split('}')[0]
+                        else:
+                            manual_score_flag = True
+                    elif 'opponent2' in line:
+                        if re.search('\|1=', line):
+                            p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                        else:
+                            p2 = line.split('|')[2].replace('}}\n', '')
+                        if 'score' in line:
+                            p2_score = line.split('score=')[1].split('}')[0]
+                        else:
+                            manual_score_flag = True
+                    if 'walkover=1' in line:
+                        p1_score = 'W'
+                        p2_score = 'L'
+                    elif 'walkover=2' in line:
+                        p1_score = 'L'
+                        p2_score = 'W'
+                    elif manual_score_flag and 'winner' in line:
+                        winner_id = line.split('winner=')[1].split('}')[0].partition('|')
+                        winner_id = winner_id[0]
+                        if winner_id == '1':
+                            p1_score += 1
+                        elif winner_id == '2':
+                            p2_score += 1
+                if series_num < prev_series and p1 != '':
+                    key = str(round_keys[round_tracker])
+                    matches.append('| ' + key + ' (BO ' + rounds[key] + ') :')
+                    round_tracker += 1
+                if p1_score == '':
+                    p1_score = '0'
+                if p2_score == '':
+                    p2_score = '0'
+                if p1 == '' and p2 != '':
+                    p1 = 'TBD'
+                if p2 == '' and p1 != '':
+                    p2 = 'TBD'
+                if p1 != '':
+                    if p1 != 'BYE' and p2 != 'BYE':
+                        matches.append(' ' + p1 + ' ' + str(p1_score) + '-' + str(p2_score) + ' ' + p2 + '    ')
+                    elif p1 == 'BYE':
+                        matches.append(' ' + p2 + ' (Bye) ')
+                    elif p2 == 'BYE':
+                        matches.append(' ' + p1 + ' (Bye) ')
+
+                prev_series = series_num
     matchstr = ' '.join(matches)
+    if 'Quarterfinals  (BO 3)' in matchstr:
+        matchstr = matchstr[matchstr.index('| Quarterfinals  (BO 3)'):]
     if prepend != '':
-        prepend = '  |  ' + prepend + '  |  '
+        prepend = '  |  ' + prepend
     matchstr = prepend + matchstr
 
     while len(matchstr) < 100 and len(matchstr) != 0:
@@ -282,7 +299,8 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
     lines = lines[-1]
     lines = lines.split('Toggle group')[1]
     group_table = lines.split('{{:')
-    group_names = [x.split('}')[0] for x in group_table[1:len(group_table)]]
+    new_groups = group_table[0].split('{{Matchlist')
+    group_names = [x.split('}')[0] for x in new_groups[1:len(new_groups)]]
 
     prev_series = 100
     round_tracker = 0
@@ -409,7 +427,7 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
                     if p2 == '':
                         p2 = 'TBD'
 
-        generate_image(group_name, results_dict)
+        generate_group_standings_img(group_name, results_dict)
 
     matchstr = ''
     for key in matches.keys():
@@ -423,8 +441,36 @@ def build_ticker_DH_EU_groups(pageid, prepend=''):
         output.write(matchstr)
     print('Populated Results')
 
+def build_kob_ticker(mainstream_group='', offstream_group=''):
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+    SPREADSHEET_ID = '1TX2a7CHmrJaaNvytF_iVUGPAD9ALnRhIJXrVjJelTDk'
+    creds = None
 
-def generate_image(group_name, results_dict):
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                '../KoB_Toolsuite/credentials.json', SCOPES) # here enter the name of your downloaded JSON file
+            creds = flow.run_local_server(port=8080)
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result_input = sheet.get(spreadsheetId=SPREADSHEET_ID).execute()
+    values_input = result_input.get('values', [])
+    sheets = result_input.get('sheets', '')
+    sheet_names = [x.get("properties", {}).get("title") for x in sheets]
+    if mainstream_group == '':
+        return sheet_names
+
+def generate_group_standings_img(group_name, results_dict):
     img = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
     img2 = Image.new('RGBA', (1920, 1080), color=(0, 0, 0, 0))
     fnt = ImageFont.truetype('Roboto-Bold.ttf', size=30)
@@ -536,3 +582,60 @@ def generate_image(group_name, results_dict):
         counter += 1
 
     img2.save(group_name.split('|')[0].replace(' ', '') + '_FullScreen.png')
+
+def get_aligulac_data(player_1, player_2):
+    params_h2h = {'apikey': 'tqYfLrmkYGPG4CZVjCvO'}
+    api_h2h_url = 'http://aligulac.com/api/v1/match/'
+    api_id_url = 'http://aligulac.com/search/json/'
+    params_id1 = {'q': player_1}
+    params_id2 = {'q': player_2}
+    id1_json = requests.get(api_id_url, params_id1).json()['players']
+    id2_json = requests.get(api_id_url, params_id2).json()['players']
+    id1_data = [x['id'] for x in id1_json if x['tag'].casefold() == player_1.casefold()][0]
+    id2_data = [x['id'] for x in id2_json if x['tag'].casefold() == player_2.casefold()][0]
+    id1_info = [x for x in id1_json if x['tag'].casefold() == player_1.casefold()][0]
+    id2_info = [x for x in id2_json if x['tag'].casefold() == player_2.casefold()][0]
+
+    player1_data = [player_1, RACELIBRARY[id1_info['race']], id1_info['teams'][0][0]]
+    player2_data = [player_2, RACELIBRARY[id2_info['race']], id2_info['teams'][0][0]]
+
+    params_h2h['pla__in'] = str(id1_data) + ',' + str(id2_data)
+    params_h2h['plb__in'] = str(id1_data) + ',' + str(id2_data)
+    params_h2h['limit'] = '100'
+    params_str = urllib.parse.urlencode(params_h2h, safe=',')
+    h2h_data = requests.get(api_h2h_url, params=params_str).json()
+    player1_wins = 0
+    player2_wins = 0
+    for result in h2h_data['objects']:
+        if result['game'].casefold() == 'lotv':
+            if int(result['sca']) > int(result['scb']):
+                if result['pla']['tag'].casefold() == player_1.casefold():
+                    player1_wins += 1
+                else:
+                    player2_wins += 1
+            elif int(result['sca']) < int(result['scb']):
+                if result['plb']['tag'].casefold() == player_2.casefold():
+                    player2_wins += 1
+                else:
+                    player1_wins += 1
+
+    params_form = {'apikey': 'tqYfLrmkYGPG4CZVjCvO'}
+    api_form_url = 'http://aligulac.com/api/v1/player/set/' + str(id1_data) + ';' + str(id2_data) + '/'
+    form_data = requests.get(api_form_url, params_form).json()
+
+    p1_form = form_data['objects'][0]['form'][form_data['objects'][1]['race']]
+    p2_form = form_data['objects'][1]['form'][form_data['objects'][0]['race']]
+
+    p1_form = p1_form[0] / (p1_form[1] + p1_form[0]) * 100
+    p2_form = p2_form[0] / (p2_form[1] + p2_form[0]) * 100
+
+    p1_form = '{:.2f}%'.format(p1_form)
+    p2_form = '{:.2f}%'.format(p2_form)
+    player1_data.append(p1_form)
+    player1_data.append(str(player1_wins))
+    player2_data.append(p2_form)
+    player2_data.append(str(player2_wins))
+
+    return [player1_data, player2_data]
+
+

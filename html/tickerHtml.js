@@ -21,6 +21,7 @@ socket.onmessage = async function(event) {
     cached_message = message;
   }
   messageElem.textContent = cached_message;
+  element.innerHTML = 'test';
   element.innerHTML = cached_message;
   element2.innerHTML = cached_message;
   element3.innerHTML = cached_message;
@@ -32,8 +33,11 @@ socket.onmessage = async function(event) {
     await new Promise(r => setTimeout(r, 10));
   }
   element2.style.animation = 'marquee ' + time + 's linear infinite ';
+  while(element2.getBoundingClientRect().right > 1920){
+    await new Promise(r => setTimeout(r, 10));
+  }
   element3.style.animation = 'marquee ' + time + 's linear infinite ' + time/2 + 's';
-    while(element.getBoundingClientRect().right > 1920){
+    while(element3.getBoundingClientRect().right > 1920){
     await new Promise(r => setTimeout(r, 1000));
   }
 };
