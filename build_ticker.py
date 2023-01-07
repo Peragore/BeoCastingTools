@@ -12,6 +12,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import os
 import pickle
+import codecs
 
 
 HEADER = {'User-Agent': 'Live Match Results Ticker (beomulf@gmail.com)'}
@@ -268,7 +269,7 @@ def build_ticker_ept_cups(pageid, prepend=''):
     while len(matchstr) < 100 and len(matchstr) != 0:
         matchstr += matchstr
 
-    with open('results.txt', 'w') as output:
+    with codecs.open('results.txt', 'w', encoding="utf-8") as output:
         output.write(matchstr)
     print('Populated Results')
     time.sleep(40)
@@ -276,6 +277,7 @@ def build_ticker_ept_cups(pageid, prepend=''):
 
 def build_ticker_DH_EU_groups(pageid, prepend=''):
     # TODO: Generalize function to all events
+    # TODO: convert match_list to dictionary so we can bump less useful results
     # TODO: convert match_list to dictionary so we can bump less useful results
     # TODO: add gui to plug in pageid
     # TODO: loop every 30s to reduce user overhead

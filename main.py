@@ -28,7 +28,8 @@ layout = [
 
 if __name__ == '__main__':
     window = sg.Window(title='BeoCastingTools', layout=layout, margins=(50, 50))
-    ServerHost.start_server()
+    # ServerHost.start_server()
+    ServerHost.ServerHost()
     has_clicked = False
     while True:
         event, values = window.read(timeout=500)
