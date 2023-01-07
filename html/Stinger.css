@@ -1,0 +1,148 @@
+body {
+    overflow: hidden;
+}
+.container_splash{
+    position: relative;
+}
+
+.right_text{
+    color: #e4d6a5;
+    font-size: 300px;
+    font-weight: bolder;
+    position: relative;
+    text-align: center;
+    right:-200px;
+    top: 500px;
+    font-family: Roboto, bold;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 6px;
+}
+
+.left_text{
+    color: #e4d6a5;
+    font-size: 300px;
+    font-weight: bolder;
+    position: relative;
+    text-align: center;
+    left:-200px;
+    top: 500px;
+    font-family: Roboto, bold;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 6px;
+}
+
+/*.right_text_stroke{*/
+/*      -webkit-text-stroke: 10px black;*/
+/*    position: absolute;*/
+/*}*/
+
+div.leftsplash{
+    height: 1080px;
+    width: 1920px;
+    background-image: url("../img/LeftSplash.png");
+    /*background-color: #2f1110;*/
+    background-size: cover;
+    position: absolute;
+    left:-1920px;
+    top: 0px;
+    /*clip-path: polygon(0 0%, 100% 0%, 60% 100%, 0% 100%);*/
+
+}
+
+div.rightsplash{
+    height: 1080px;
+    width: 1920px;
+    background-image: url("../img/RightSplash.png");
+    /*background-color: #2f1110;*/
+    background-size: cover;
+    position: absolute;
+    right:-1920px;
+    top: 0px;
+    /*clip-path: polygon(400px 0%, 100% 0%, 100% 100%, 0% 100%);*/
+}
+
+.player1_img{
+    /*content: url("../img/byun_Pose.png");*/
+    position: absolute;
+    right:-400px;
+    bottom: 0px;
+    height: auto;
+    width:auto;
+    max-height: 900px;
+    min-height: 700px;
+}
+
+.player1_race{
+    /*content: url("../img/Player_images/Prot.png");*/
+    position: absolute;
+    right:-400px;
+    vertical-align: middle;
+    height: auto;
+    width:auto;
+    max-height: 900px;
+}
+
+.player2_img{
+    /*content: url("../img/byun_R.png");*/
+    position: absolute;
+    left:-500px;
+    bottom: 0px;
+    height: auto;
+    width:auto;
+    max-height: 900px;
+    min-height: 700px;
+}
+
+.player2_race{
+    /*content: url("../img/Player_images/Zerg.png");*/
+    position: absolute;
+    left:-500px;
+    vertical-align: middle;
+    height: auto;
+    width:auto;
+    max-height: 900px;
+}
+@keyframes left_in_1 {
+    0% {left:-1920px; top:0px;}
+    30% {left:0px; top:0px;}
+    60% {left:0px; top:0px;}
+    100% {left:-1920px; top:0px;}
+}
+
+@keyframes left_in_2 {
+    0% {left:-1920px; top:0px;}
+    30% {left:0px; top:0px;}
+    60% {left:0px; top:0px;}
+    100% {left:-1920px; top:0px;}
+}
+
+
+
+@keyframes right_in_1 {
+    0% {right:-1920px; top:0px;}
+    30% {right:0px; top:0px;}
+    60% {right:0px; top:0px;}
+    100% {right:-1920px; top:0px;}
+}
+
+@keyframes right_in_2 {
+    0% {right:-1920px; top:0px;}
+    30% {right:0px; top:0px;}
+    60% {right:0px; top:0px;}
+    100% {right:-1920px; top:0px;}
+}
+
+
+.leftsplash{
+    animation:left_in_1 5000ms;
+}
+
+.rightsplash{
+    animation:right_in_1 5000ms;
+}
+
+/*.right_text{*/
+/*    animation: right_text_in 3000ms;*/
+/*}*/
