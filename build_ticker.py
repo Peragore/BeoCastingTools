@@ -585,59 +585,5 @@ def generate_group_standings_img(group_name, results_dict):
 
     img2.save(group_name.split('|')[0].replace(' ', '') + '_FullScreen.png')
 
-def get_aligulac_data(player_1, player_2):
-    params_h2h = {'apikey': 'tqYfLrmkYGPG4CZVjCvO'}
-    api_h2h_url = 'http://aligulac.com/api/v1/match/'
-    api_id_url = 'http://aligulac.com/search/json/'
-    params_id1 = {'q': player_1}
-    params_id2 = {'q': player_2}
-    id1_json = requests.get(api_id_url, params_id1).json()['players']
-    id2_json = requests.get(api_id_url, params_id2).json()['players']
-    id1_data = [x['id'] for x in id1_json if x['tag'].casefold() == player_1.casefold()][0]
-    id2_data = [x['id'] for x in id2_json if x['tag'].casefold() == player_2.casefold()][0]
-    id1_info = [x for x in id1_json if x['tag'].casefold() == player_1.casefold()][0]
-    id2_info = [x for x in id2_json if x['tag'].casefold() == player_2.casefold()][0]
-
-    player1_data = [player_1, RACELIBRARY[id1_info['race']], id1_info['teams'][0][0]]
-    player2_data = [player_2, RACELIBRARY[id2_info['race']], id2_info['teams'][0][0]]
-
-    params_h2h['pla__in'] = str(id1_data) + ',' + str(id2_data)
-    params_h2h['plb__in'] = str(id1_data) + ',' + str(id2_data)
-    params_h2h['limit'] = '100'
-    params_str = urllib.parse.urlencode(params_h2h, safe=',')
-    h2h_data = requests.get(api_h2h_url, params=params_str).json()
-    player1_wins = 0
-    player2_wins = 0
-    for result in h2h_data['objects']:
-        if result['game'].casefold() == 'lotv':
-            if int(result['sca']) > int(result['scb']):
-                if result['pla']['tag'].casefold() == player_1.casefold():
-                    player1_wins += 1
-                else:
-                    player2_wins += 1
-            elif int(result['sca']) < int(result['scb']):
-                if result['plb']['tag'].casefold() == player_2.casefold():
-                    player2_wins += 1
-                else:
-                    player1_wins += 1
-
-    params_form = {'apikey': 'tqYfLrmkYGPG4CZVjCvO'}
-    api_form_url = 'http://aligulac.com/api/v1/player/set/' + str(id1_data) + ';' + str(id2_data) + '/'
-    form_data = requests.get(api_form_url, params_form).json()
-
-    p1_form = form_data['objects'][0]['form'][form_data['objects'][1]['race']]
-    p2_form = form_data['objects'][1]['form'][form_data['objects'][0]['race']]
-
-    p1_form = p1_form[0] / (p1_form[1] + p1_form[0]) * 100
-    p2_form = p2_form[0] / (p2_form[1] + p2_form[0]) * 100
-
-    p1_form = '{:.2f}%'.format(p1_form)
-    p2_form = '{:.2f}%'.format(p2_form)
-    player1_data.append(p1_form)
-    player1_data.append(str(player1_wins))
-    player2_data.append(p2_form)
-    player2_data.append(str(player2_wins))
-
-    return [player1_data, player2_data]
 
 

@@ -7,7 +7,7 @@ import threading
 import PySimpleGUI as sg
 from os import path
 from threading import Thread
-import ServerHost
+import HTMLDataHandler
 if path.exists('results.txt'):
     f = open('results.txt', 'rt')
     text = f.read()
@@ -29,7 +29,7 @@ layout = [
 if __name__ == '__main__':
     window = sg.Window(title='BeoCastingTools', layout=layout, margins=(50, 50))
     # ServerHost.start_server()
-    ServerHost.ServerHost()
+    HTMLDataHandler.HTMLDataHandler()
     has_clicked = False
     while True:
         event, values = window.read(timeout=500)
