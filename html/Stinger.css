@@ -47,6 +47,7 @@ div.leftsplash{
     position: absolute;
     left:-1920px;
     top: 0px;
+    will-change: transform;
     /*clip-path: polygon(0 0%, 100% 0%, 60% 100%, 0% 100%);*/
 
 }
@@ -60,6 +61,7 @@ div.rightsplash{
     position: absolute;
     right:-1920px;
     top: 0px;
+    will-change: transform;
     /*clip-path: polygon(400px 0%, 100% 0%, 100% 100%, 0% 100%);*/
 }
 
@@ -72,6 +74,7 @@ div.rightsplash{
     width:auto;
     max-height: 900px;
     min-height: 700px;
+    will-change: contents;
 }
 
 .player1_race{
@@ -82,66 +85,66 @@ div.rightsplash{
     height: auto;
     width:auto;
     max-height: 900px;
+    will-change: contents;
 }
 
 .player2_img{
     /*content: url("../img/byun_R.png");*/
     position: absolute;
-    left:-500px;
+    left:-400px;
     bottom: 0px;
     height: auto;
     width:auto;
     max-height: 900px;
     min-height: 700px;
+    will-change: contents;
 }
 
 .player2_race{
     /*content: url("../img/Player_images/Zerg.png");*/
     position: absolute;
-    left:-500px;
+    left:-400px;
     vertical-align: middle;
     height: auto;
     width:auto;
     max-height: 900px;
+    will-change: contents;
 }
-@keyframes left_in_1 {
-    0% {left:-1920px; top:0px;}
-    30% {left:0px; top:0px;}
-    60% {left:0px; top:0px;}
-    100% {left:-1920px; top:0px;}
-}
-
-@keyframes left_in_2 {
-    0% {left:-1920px; top:0px;}
-    30% {left:0px; top:0px;}
-    60% {left:0px; top:0px;}
-    100% {left:-1920px; top:0px;}
-}
-
+/*@keyframes left_in_1 {*/
+/*    0% {left:-1920px; top:0px;}*/
+/*    30% {left:0px; top:0px;}*/
+/*    60% {left:0px; top:0px;}*/
+/*    100% {left:-1920px; top:0px;}*/
+/*}*/
 
 
 @keyframes right_in_1 {
-    0% {right:-1920px; top:0px;}
-    30% {right:0px; top:0px;}
-    60% {right:0px; top:0px;}
-    100% {right:-1920px; top:0px;}
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    30% {-webkit-transform:translateX(-1920px)}
+    60% {-webkit-transform:translateX(-1920px)}
+}
+
+@keyframes right_in {
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    30% {-webkit-transform:translateX(-1920px)}
+    60% {-webkit-transform:translateX(-1920px)}
 }
 
 @keyframes right_in_2 {
-    0% {right:-1920px; top:0px;}
-    30% {right:0px; top:0px;}
-    60% {right:0px; top:0px;}
-    100% {right:-1920px; top:0px;}
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    30% {-webkit-transform:translateX(1920px)}
+    60% {-webkit-transform:translateX(1920px)}
+}
+
+div.rightsplash{
+    animation:right_in 5000ms;
+}
+
+div.leftsplash{
+    animation:right_in_2 5000ms;
 }
 
 
-.leftsplash{
-    animation:left_in_1 5000ms;
-}
-
-.rightsplash{
-    animation:right_in_1 5000ms;
-}
 
 /*.right_text{*/
 /*    animation: right_text_in 3000ms;*/

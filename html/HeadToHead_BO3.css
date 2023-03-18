@@ -1,0 +1,150 @@
+body {
+    overflow: hidden;
+    font: 16px/1.8 Roboto, bolder;
+}
+
+div.H2HContainer{
+    height: 1080px;
+    width: 1920px;
+    background-image: url("../img/BASI_H2H.png");
+    /*background-color: #2f1110;*/
+    background-size: cover;
+    position: absolute;
+    left:0;
+    top: 0;
+}
+
+.p1container {
+    /*width: 84%;*/
+    /*margin:0 auto;*/
+    position:absolute;
+    right:315px;
+    top: 335px;
+    width: 150px;
+    height:75px;
+    /*max-width:150px;*/
+}
+#player1{
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.p2container {
+    /*width: 84%;*/
+    /*margin:0 auto;*/
+    position:absolute;
+    right:60px;
+    top: 335px;
+    width: 150px;
+    height:75px;
+    /*max-width:150px;*/
+}
+#player2{
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.H2H1{
+    position:absolute;
+    right:315px;
+    top: 410px;
+    width: 150px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.H2H2{
+    position:absolute;
+    right:60px;
+    top: 410px;
+    width: 150px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+.Form1{
+    position:absolute;
+    right:345px;
+    top: 490px;
+    width: 120px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.Form2{
+    position:absolute;
+    right:60px;
+    top: 490px;
+    width: 120px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+.WinChance1{
+    position:absolute;
+    right:350px;
+    top: 565px;
+    width: 120px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.WinChance2{
+    position:absolute;
+    right:60px;
+    top: 565px;
+    width: 120px;
+    height:75px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+.MeanRes{
+    position:absolute;
+    right:175px;
+    top: 675px;
+    width: 180px;
+    height:90px;
+    color: #FFFF;
+    /*font-size: 40px;*/
+    font-weight: bold;
+    text-align: center;
+    font-family: Roboto, bold;
+}
+
+header {
+    width: 100%;
+    margin:0px auto;
+}
+
+
+
+
+

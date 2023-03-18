@@ -11,6 +11,17 @@ function readTextFile(file, callback) {
     rawFile.send(null);
 }
 
+function reset_animation(){
+    let right_splash = document.getElementById('right_splash_id');
+    let left_splash = document.getElementById('left_splash_id');
+    right_splash.style.animation = 'none';
+    left_splash.style.animation = 'none';
+    right_splash.offsetHeight;
+    left_splash.offsetHeight;
+    right_splash.style.animation = null;
+    left_splash.style.animation = null;
+}
+
 //usage:
 readTextFile("../json/datastream.json", function(text){
     var data = JSON.parse(text);
@@ -27,22 +38,14 @@ readTextFile("../json/datastream.json", function(text){
     document.getElementById('left_player_id').style.content = images[1];
     document.getElementById('right_player_race').style.content = images[2];
     document.getElementById('left_player_race').style.content = images[3];
+    reset_animation();
 
 
 
 
 });
 
-function reset_animation(){
-    let right_splash = document.getElementById('right_splash_id');
-    let left_splash = document.getElementById('left_splash_id');
-    right_splash.style.animation = 'none';
-    left_splash.style.animation = 'none';
-    right_splash.offsetHeight;
-    left_splash.offsetHeight;
-    right_splash.style.animation = null;
-    left_splash.style.animation = null;
-}
+
 
 window.addEventListener('obsSourceActiveChanged', function (event){
     if (event.detail.active){
