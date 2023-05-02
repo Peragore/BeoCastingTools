@@ -1,0 +1,172 @@
+body {
+    overflow: hidden;
+}
+.container_splash{
+    position: relative;
+}
+
+.right_text{
+    color: #e4d6a5;
+    font-size: 100px;
+    font-weight: bolder;
+    position: relative;
+    text-align: center;
+    right:-150px;
+    top: 0px;
+    width:350px;
+    height:112px;
+    font-family: Roboto, bold;
+    text-transform: uppercase;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 4px;
+}
+
+.right_score{
+    color: #e4d6a5;
+    font-size: 100px;
+    font-weight: bolder;
+    position: relative;
+    text-align: left;
+    right:-550px;
+    top: -125px;
+    font-family: Roboto, bold;
+    text-transform: uppercase;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 6px;
+}
+
+.left_text{
+    color: #e4d6a5;
+    font-size: 100px;
+    font-weight: bolder;
+    position: relative;
+    text-align: center;
+    right:-180px;
+    top: 0px;
+    width:350px;
+    height:112px;
+    text-transform: uppercase;
+    font-family: Roboto, bold;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 4px;
+}
+
+.left_score{
+    color: #e4d6a5;
+    font-size: 100px;
+    font-weight: bolder;
+    position: relative;
+    text-align: right;
+    left:-550px;
+    top: -120px;
+    text-transform: uppercase;
+    font-family: Roboto, bold;
+    -webkit-text-stroke-color:black;
+    -webkit-text-fill-color: #e4d6a5;
+    -webkit-text-stroke-width: 6px;
+}
+
+/*.right_text_stroke{*/
+/*      -webkit-text-stroke: 10px black;*/
+/*    position: absolute;*/
+/*}*/
+
+div.leftsplash{
+    height: 121px;
+    width: 692px;
+    background-image: url("../img/LeftName.png");
+    /*background-color: #2f1110;*/
+    background-size: cover;
+    position: absolute;
+    left:-1960px;
+    top: 880px;
+    will-change: transform;
+    /*clip-path: polygon(0 0%, 100% 0%, 60% 100%, 0% 100%);*/
+
+}
+
+div.rightsplash{
+    height: 121px;
+    width: 692px;
+    background-image: url("../img/RightName.png");
+    /*background-color: #2f1110;*/
+    background-size: cover;
+    position: absolute;
+    right:-1960px;
+    top: 100px;
+    will-change: transform;
+    /*clip-path: polygon(400px 0%, 100% 0%, 100% 100%, 0% 100%);*/
+}
+
+
+.player1_race{
+    /*content: url("../img/Player_images/Prot.png");*/
+    position: absolute;
+    right:520px;
+    top:10px;
+    vertical-align: middle;
+    height: auto;
+    width:auto;
+    max-height: 100px;
+    will-change: contents;
+}
+
+.player2_race{
+    /*content: url("../img/Player_images/Zerg.png");*/
+    position: absolute;
+    left:520px;
+    top:10px;
+    vertical-align: middle;
+    height: auto;
+    width:auto;
+    max-height: 100px;
+    will-change: contents;
+}
+/*@keyframes left_in_1 {*/
+/*    0% {left:-1920px; top:0px;}*/
+/*    30% {left:0px; top:0px;}*/
+/*    60% {left:0px; top:0px;}*/
+/*    100% {left:-1920px; top:0px;}*/
+/*}*/
+
+
+@keyframes right_in_1 {
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    30% {-webkit-transform:translateX(-1920px)}
+    60% {-webkit-transform:translateX(-1920px)}
+}
+
+@keyframes right_in {
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    50% {-webkit-transform:translateX(-1920px)}
+    100% {-webkit-transform:translateX(-1920px)}
+
+
+}
+
+@keyframes right_in_2 {
+    /*0% {-webkit-transform:translateX(-1920px)}*/
+    50% {-webkit-transform:translateX(1920px)}
+    100% {-webkit-transform:translateX(1920px)}
+
+
+}
+
+div.rightsplash{
+    animation:right_in 7000ms forwards;
+    animation-delay: 3s;
+}
+
+div.leftsplash{
+    animation:right_in_2 7000ms forwards;
+    animation-delay: 3s;
+}
+
+
+
+/*.right_text{*/
+/*    animation: right_text_in 3000ms;*/
+/*}*/

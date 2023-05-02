@@ -181,87 +181,91 @@ def build_ticker_ept_cups(pageid, prepend=''):
 
     """ Parse a section of a page, fetch its table data and save it to a CSV file
     """
-    res = S.get(url=URL, params=params, headers=HEADER)
-    data = res.json()
-    wikitext = data['parse']['wikitext']['*']
-    lines = wikitext.split('|-')
-    matches = []
-    rounds = {}
+    try:
+        res = S.get(url=URL, params=params, headers=HEADER)
+        data = res.json()
+        wikitext = data['parse']['wikitext']['*']
+        lines = wikitext.split('|-')
+        matches = []
+        rounds = {}
 
-    table = lines[0].split('==Results==')
-    del table[0]
-    table = re.split('\|R[0-9]', table[0])
-    prev_series = 100
-    round_tracker = 0
+        table = lines[0].split('==Results==')
+        del table[0]
+        table = re.split('\|R[0-9]', table[0])
+        prev_series = 100
+        round_tracker = 0
 
-    for series in table:
-        if '{{bracket' not in series:
-            if 'header' in series:
-                header = series.split('=')[1].split('({{')
-                rounds[str(header[0])] = header[1].split('|')[1].replace('}})\n', '').split('\n')[0]
-            elif re.search('M[0-9]', series):
-                round_keys = list(rounds.keys())
-                subseries = series.split('    ')
-                series_num = int(subseries[0].split('M')[1].split('=')[0])
-                manual_score_flag = False
-                p1_score = 0
-                p2_score = 0
-                for line in subseries:
-                    if 'opponent1' in line:
-                        if re.search('\|1=', line):
-                            p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
-                        else:
-                            p1 = line.split('|')[2].replace('}}\n', '')
-                        if 'score' in line:
-                            p1_score = line.split('score=')[1].split('}')[0]
-                        else:
-                            manual_score_flag = True
-                    elif 'opponent2' in line:
-                        if re.search('\|1=', line):
-                            p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
-                        else:
-                            p2 = line.split('|')[2].replace('}}\n', '')
-                        if 'score' in line:
-                            p2_score = line.split('score=')[1].split('}')[0]
-                        else:
-                            manual_score_flag = True
-                    if 'walkover=1' in line:
-                        p1_score = 'W'
-                        p2_score = 'L'
-                    elif 'walkover=2' in line:
-                        p1_score = 'L'
-                        p2_score = 'W'
-                    elif manual_score_flag and 'winner' in line:
-                        winner_id = line.split('winner=')[1].split('}')[0].partition('|')
-                        winner_id = winner_id[0]
-                        if winner_id == '1':
-                            p1_score += 1
-                        elif winner_id == '2':
-                            p2_score += 1
-                if series_num < prev_series and p1 != '':
-                    key = str(round_keys[round_tracker])
-                    matches.append('| ' + key + ' (BO ' + rounds[key] + ') :')
-                    round_tracker += 1
-                if p1_score == '':
-                    p1_score = '0'
-                if p2_score == '':
-                    p2_score = '0'
-                if p1 == '' and p2 != '':
-                    p1 = 'TBD'
-                if p2 == '' and p1 != '':
-                    p2 = 'TBD'
-                if p1 != '':
-                    if p1 != 'BYE' and p2 != 'BYE':
-                        matches.append(' ' + p1 + ' ' + str(p1_score) + '-' + str(p2_score) + ' ' + p2 + '    ')
-                    elif p1 == 'BYE':
-                        matches.append(' ' + p2 + ' (Bye) ')
-                    elif p2 == 'BYE':
-                        matches.append(' ' + p1 + ' (Bye) ')
+        for series in table:
+            if '{{bracket' not in series:
+                if 'header' in series:
+                    header = series.split('=')[1].split('({{')
+                    rounds[str(header[0])] = header[1].split('|')[1].replace('}})\n', '').split('\n')[0]
+                elif re.search('M[0-9]', series):
+                    round_keys = list(rounds.keys())
+                    subseries = series.split('    ')
+                    series_num = int(subseries[0].split('M')[1].split('=')[0])
+                    manual_score_flag = False
+                    p1_score = 0
+                    p2_score = 0
+                    for line in subseries:
+                        if 'opponent1' in line:
+                            if re.search('\|1=', line):
+                                p1 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                            else:
+                                p1 = line.split('|')[2].replace('}}\n', '')
+                            if 'score' in line:
+                                p1_score = line.split('score=')[1].split('}')[0]
+                            else:
+                                manual_score_flag = True
+                        elif 'opponent2' in line:
+                            if re.search('\|1=', line):
+                                p2 = line.split('|1=')[-1].split('|')[0].replace('}}\n', '')
+                            else:
+                                p2 = line.split('|')[2].replace('}}\n', '')
+                            if 'score' in line:
+                                p2_score = line.split('score=')[1].split('}')[0]
+                            else:
+                                manual_score_flag = True
+                        if 'walkover=1' in line:
+                            p1_score = 'W'
+                            p2_score = 'L'
+                        elif 'walkover=2' in line:
+                            p1_score = 'L'
+                            p2_score = 'W'
+                        elif manual_score_flag and 'winner' in line:
+                            winner_id = line.split('winner=')[1].split('}')[0].partition('|')
+                            winner_id = winner_id[0]
+                            if winner_id == '1':
+                                p1_score += 1
+                            elif winner_id == '2':
+                                p2_score += 1
+                    if series_num < prev_series and p1 != '':
+                        key = str(round_keys[round_tracker])
+                        matches.append('| ' + key + ' (BO ' + rounds[key] + ') :')
+                        round_tracker += 1
+                    if p1_score == '':
+                        p1_score = '0'
+                    if p2_score == '':
+                        p2_score = '0'
+                    if p1 == '' and p2 != '':
+                        p1 = 'TBD'
+                    if p2 == '' and p1 != '':
+                        p2 = 'TBD'
+                    if p1 != '':
+                        if p1 != 'BYE' and p2 != 'BYE':
+                            matches.append(' ' + p1 + ' ' + str(p1_score) + '-' + str(p2_score) + ' ' + p2 + '    ')
+                        elif p1 == 'BYE':
+                            matches.append(' ' + p2 + ' (Bye) ')
+                        elif p2 == 'BYE':
+                            matches.append(' ' + p1 + ' (Bye) ')
 
-                prev_series = series_num
-    matchstr = ' '.join(matches)
-    if 'Quarterfinals  (BO 3)' in matchstr:
-        matchstr = matchstr[matchstr.index('| Quarterfinals  (BO 3)'):]
+                    prev_series = series_num
+        matchstr = ' '.join(matches)
+        if 'Quarterfinals  (BO 3)' in matchstr:
+            matchstr = matchstr[matchstr.index('| Quarterfinals  (BO 3)'):]
+    except:
+        print('Invalid ID')
+        matchstr = ''
     if prepend != '':
         prepend = '  |  ' + prepend
     matchstr = prepend + matchstr
@@ -271,7 +275,9 @@ def build_ticker_ept_cups(pageid, prepend=''):
 
     with codecs.open('results.txt', 'w', encoding="utf-8") as output:
         output.write(matchstr)
-    print('Populated Results')
+        print('Populated Results')
+
+
     time.sleep(40)
 
 
