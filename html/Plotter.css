@@ -1,0 +1,27 @@
+body {
+    overflow: hidden;
+    font: 16px/1.8 Roboto, bolder;
+}
+div.myPlot{
+    max-height: 410px;
+    position: relative;
+    top: 670px;
+}
+
+.p1Container{
+    position:absolute;
+    right:960px;
+    top:0px;
+    width:960px;
+    height: 670px;
+    /*background-color: #2f0099;*/
+}
+
+div.p2Container{
+    position:absolute;
+    left:960px;
+    top:0px;
+    width:960px;
+    height:670px;
+    /*background-color: #006699;*/
+}

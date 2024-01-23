@@ -28,16 +28,20 @@ readTextFile("../json/datastream.json", function(text){
     // console.log(data)
     let scores = data.scores;
     let score_keys = Object.keys(scores);
-    let p1_score = scores[score_keys[0]];
-    let p2_score = scores[score_keys[1]];
-    let images = data.images;
-    // console.log(images)
+    let p1_score = scores[score_keys[0]][0];
+    let p2_score = scores[score_keys[1]][0];
+    let p1_image = scores[score_keys[0]][1]
+    let p2_image = scores[score_keys[1]][1]
+    let p1_race = scores[score_keys[0]][2]
+    let p2_race = scores[score_keys[1]][2]
+
+    console.log(p2_score)
     document.getElementById('right_text_id').textContent = p1_score;
     document.getElementById('left_text_id').textContent = p2_score;
-    document.getElementById('right_player_id').style.content = images[0];
-    document.getElementById('left_player_id').style.content = images[1];
-    document.getElementById('right_player_race').style.content = images[2];
-    document.getElementById('left_player_race').style.content = images[3];
+    document.getElementById('right_player_id').style.content = p1_image;
+    document.getElementById('left_player_id').style.content = p2_image;
+    document.getElementById('right_player_race').style.content = p1_race;
+    document.getElementById('left_player_race').style.content = p2_race;
     reset_animation();
 
 
@@ -54,16 +58,20 @@ window.addEventListener('obsSourceActiveChanged', function (event){
         // console.log(data)
         let scores = data.scores;
         let score_keys = Object.keys(scores);
-        let p1_score = scores[score_keys[0]];
-        let p2_score = scores[score_keys[1]];
-        let images = data.images;
-        console.log(images)
+        let p1_score = scores[score_keys[0]][0];
+        let p2_score = scores[score_keys[1]][0];
+        let p1_image = scores[score_keys[0]][1]
+        let p2_image = scores[score_keys[1]][1]
+        let p1_race = scores[score_keys[0]][2]
+        let p2_race = scores[score_keys[1]][2]
+
+        console.log(p2_score)
         document.getElementById('right_text_id').textContent = p1_score;
         document.getElementById('left_text_id').textContent = p2_score;
-        document.getElementById('right_player_id').style.content = images[0];
-        document.getElementById('left_player_id').style.content = images[1];
-        document.getElementById('right_player_race').style.content = images[2];
-        document.getElementById('left_player_race').style.content = images[3];
+        document.getElementById('right_player_id').style.content = p1_image;
+        document.getElementById('left_player_id').style.content = p2_image;
+        document.getElementById('right_player_race').style.content = p1_race;
+        document.getElementById('left_player_race').style.content = p2_race;
     });
     console.log('Transitioning')
     reset_animation();

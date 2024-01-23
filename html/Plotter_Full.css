@@ -1,0 +1,32 @@
+body {
+    overflow: hidden;
+    font: 16px/1.8 Roboto, bolder;
+}
+div.myPlot{
+    /*max-height: 1080px;*/
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    top: 0px;
+    z-index: 8;
+}
+
+div.myPlotTop{
+    /*max-height: 1080px;*/
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    top: 0px;
+    z-index:11;
+}
+
+/*.upgradeContainer{*/
+/*    position:absolute;*/
+/*    right:0px;*/
+/*    top:0px;*/
+/*    width:1920px;*/
+/*    height: 1080px;*/
+/*    !*background-color: #2f0099;*!*/
+/*    z-index: 10;*/
+/*}*/
+
